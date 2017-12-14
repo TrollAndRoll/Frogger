@@ -66,7 +66,7 @@ void keyPressed()
 //15. In the draw() method, alternate the driving direction of each of your cars to either go left or right. Use the display() method after every drive method. 
 
 
-}//16. Create a getX(), getY(), and getSize() method in your Car class.
+}
 
 //17. Check when a car hits your frog. You can use the following intersection method to help. 
 
@@ -95,8 +95,10 @@ Copy your code here to make your own frogger webpage!!
 https://hyperdev.com/#!/project/twilight-toe
 **/
 
-int frogX = 0, frogY = 0, speed = 3;
+int frogX = 200, frogY = 400, speed = 3;
 Car vroom = new Car(400, 50, 20, 3);
+Car beep = new Car(200, 100, 20, 3); 
+Car rar = new Car(0, 150, 20, -3);
 void setup()
 {
   size(400, 400);
@@ -105,51 +107,74 @@ void setup()
   
  void KeepInside()
   {
-   if (frogX >= width - 50)
+   if (frogX >= width)
    {
-     frogX = width - 50;
+     frogX = width;
    }
    
-   if (frogY >= width - 50)
+   if (frogY >= width)
    {
-     frogY = width - 50;
+     frogY = width;
    }
    
-   if (frogX <= 50)
+   if (frogX <= 0)
    {
-     frogX = 0 +  50;
+     frogX = 0;
    }
    
-   if (frogY <= 50)
+   if (frogY <= 0)
    {
-     frogY = 0 + 50;
+     frogY = 0;
    }
    
   }
   
  class Car
+ //16. Create a getX(), getY(), and getSize() method in your Car class
  {
-   int X, Y, Size, Speed;
+   int X, Y, Size, Speed, Color;
    Car(int x, int y, int size, int speed)
-   {
+  {
      X = x;
      Y = y;
      Size = size;
      Speed = speed;
+     Color = color(random(200)+55, random(200)+55, random(200)+55);
    }
+   
+   int getX()
+   {
+     return X;
+   }
+   
+   int getY()
+   {
+     return Y;
+   }
+   
+   int getSize()
+   {
+     
+     return Size;
+   } 
    
     //6. Create a Car class inside your sketch. 
 //Your Car class will include the car’s position at x, position at y, the size of the car, and the speed of the car.
 //7. Create a constructor inside your Car class that initializes each variable with parameters.
     void display() 
   {
-    fill(0,255,0);
+    fill(Color);
     rect(X, Y,  Size, Speed);
     X = X - Speed;
-    if (X <= 0)
+    if (X < 0)
     {
        X = width;
     }
+    if (X > width)
+    {
+       X = 0;
+    }
+    
   }
 
  }
@@ -182,6 +207,23 @@ void setup()
    }
 }
   
+boolean intersects(Car car) 
+{
+//if ((frogY > car.getY() && frogY < car.getY()+15) && (frogX > car.getX() && frogX < car.getX()+car.getSize()))
+if (inRange(frogY, car.getY(), car.getY()+15) && inRange(frogX, car.getX(), car.getX()+car.getSize())|| 
+    inRange(frogY+20, car.getY(), car.getY()+15) && inRange(frogX+20, car.getX(), car.getX()+car.getSize()))
+
+          return true;
+    else 
+        return false;  
+}
+
+boolean inRange(int x, int low, int high)
+{
+  return low < x && x < high; 
+}
+
+
 
 
 void draw()
@@ -190,6 +232,20 @@ void draw()
   
   background(#FF1717, #22FF17, #FF171B); //in draw method
    fill(#05FF41);      // in draw method 
-  ellipse(frogX, frogY, 100, 100);  // in draw method 
+  ellipse(frogX, frogY, 20, 20);  // in draw method 
   vroom.display();
+  beep.display();
+  rar.display();
+  
+  if (intersects(vroom) || intersects(beep) || intersects(rar))
+  {
+    frogX = 200;
+    frogY = 400;
+  }  
+  
+  if (frogY == 0)
+  {
+    text( "You Win!!!", 100, 200); 
+    textSize(50); 
+  } 
 }
