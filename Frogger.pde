@@ -95,10 +95,11 @@ Copy your code here to make your own frogger webpage!!
 https://hyperdev.com/#!/project/twilight-toe
 **/
 
-int frogX = 200, frogY = 400, speed = 3;
+int frogX = 200, frogY = 400, speed = 3, level = 1, cap = 5;
 Car vroom = new Car(400, 50, 20, 3);
 Car beep = new Car(200, 100, 20, 3); 
 Car rar = new Car(0, 150, 20, -3);
+
 void setup()
 {
   size(400, 400);
@@ -183,7 +184,8 @@ void setup()
   void keyPressed()
   {
 
-  if(key == CODED){
+  if(key == CODED)// && finished == true)
+  {
       if(keyCode == UP)
       {
         frogY = frogY - speed;
@@ -203,7 +205,8 @@ void setup()
       {
         //Frog X position goes left
         frogX = frogX - speed;
-      }
+      }   
+      
    }
 }
   
@@ -233,19 +236,39 @@ void draw()
   background(#FF1717, #22FF17, #FF171B); //in draw method
    fill(#05FF41);      // in draw method 
   ellipse(frogX, frogY, 20, 20);  // in draw method 
+  textSize(15);
+    fill(255, 255, 255);
+    text( "Level "+ level, 340, 15); 
   vroom.display();
   beep.display();
   rar.display();
   
   if (intersects(vroom) || intersects(beep) || intersects(rar))
   {
-    frogX = 200;
-    frogY = 400;
+    reset();
   }  
   
   if (frogY == 0)
   {
-    text( "You Win!!!", 100, 200); 
-    textSize(50); 
+    level = level + 1;
+    cap = cap + 1;
+    vroom.Speed = (int)random(cap)+1;
+    beep.Speed = (int)random(cap)+1;
+    rar.Speed = (int)random(cap)+1;
+    //textSize(50);
+    //fill(255, 255, 255);
+    //text( "Level: "+ level, 100, 200); 
+    delay(1000);
+    reset();
+    
+    //reset();
+    
   } 
+  
 }
+
+ void reset()
+  {
+    frogX = 200;
+    frogY = 400;
+  } 
